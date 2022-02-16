@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ProjectPasalDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="tblUser">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Phone" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="UserRoles" Relationship="ProjectPasalDBModel.FK_UserRole_tblUser" FromRole="tblUser" ToRole="UserRole" />
+    <NavigationProperty Name="tblSales" Relationship="ProjectPasalDBModel.FK_tblSale_tblUser" FromRole="tblUser" ToRole="tblSale" />
+  </EntityType>
+  <EntityContainer Name="ProjectPasalDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="tblUsers" EntityType="Self.tblUser" />
+    <EntitySet Name="tblRoles" EntityType="ProjectPasalDBModel.tblRole" />
+    <EntitySet Name="UserRoles" EntityType="ProjectPasalDBModel.UserRole" />
+    <AssociationSet Name="FK_UserRole_tblRole" Association="ProjectPasalDBModel.FK_UserRole_tblRole">
+      <End Role="tblRole" EntitySet="tblRoles" />
+      <End Role="UserRole" EntitySet="UserRoles" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserRole_tblUser" Association="ProjectPasalDBModel.FK_UserRole_tblUser">
+      <End Role="tblUser" EntitySet="tblUsers" />
+      <End Role="UserRole" EntitySet="UserRoles" />
+    </AssociationSet>
+    <EntitySet Name="tblProducts" EntityType="ProjectPasalDBModel.tblProduct" />
+    <EntitySet Name="tblCustomers" EntityType="ProjectPasalDBModel.tblCustomer" />
+    <EntitySet Name="CustomerTransactions" EntityType="ProjectPasalDBModel.CustomerTransaction" />
+    <EntitySet Name="ProductTransactions" EntityType="ProjectPasalDBModel.ProductTransaction" />
+    <EntitySet Name="SalesItems" EntityType="ProjectPasalDBModel.SalesItem" />
+    <EntitySet Name="tblSales" EntityType="ProjectPasalDBModel.tblSale" />
+    <AssociationSet Name="FK_CustomerTransaction_tblCustomer" Association="ProjectPasalDBModel.FK_CustomerTransaction_tblCustomer">
+      <End Role="tblCustomer" EntitySet="tblCustomers" />
+      <End Role="CustomerTransaction" EntitySet="CustomerTransactions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductTransaction_tblProduct" Association="ProjectPasalDBModel.FK_ProductTransaction_tblProduct">
+      <End Role="tblProduct" EntitySet="tblProducts" />
+      <End Role="ProductTransaction" EntitySet="ProductTransactions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SalesItem_tblProduct" Association="ProjectPasalDBModel.FK_SalesItem_tblProduct">
+      <End Role="tblProduct" EntitySet="tblProducts" />
+      <End Role="SalesItem" EntitySet="SalesItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SalesItem_tblSale" Association="ProjectPasalDBModel.FK_SalesItem_tblSale">
+      <End Role="tblSale" EntitySet="tblSales" />
+      <End Role="SalesItem" EntitySet="SalesItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblSale_tblCustomer" Association="ProjectPasalDBModel.FK_tblSale_tblCustomer">
+      <End Role="tblCustomer" EntitySet="tblCustomers" />
+      <End Role="tblSale" EntitySet="tblSales" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblSale_tblUser" Association="ProjectPasalDBModel.FK_tblSale_tblUser">
+      <End Role="tblUser" EntitySet="tblUsers" />
+      <End Role="tblSale" EntitySet="tblSales" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="tblRole">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="UserRoles" Relationship="ProjectPasalDBModel.FK_UserRole_tblRole" FromRole="tblRole" ToRole="UserRole" />
+  </EntityType>
+  <EntityType Name="UserRole">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="RoleId" Type="Int32" />
+    <NavigationProperty Name="tblRole" Relationship="ProjectPasalDBModel.FK_UserRole_tblRole" FromRole="UserRole" ToRole="tblRole" />
+    <NavigationProperty Name="tblUser" Relationship="ProjectPasalDBModel.FK_UserRole_tblUser" FromRole="UserRole" ToRole="tblUser" />
+  </EntityType>
+  <Association Name="FK_UserRole_tblRole">
+    <End Type="ProjectPasalDBModel.tblRole" Role="tblRole" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="ProjectPasalDBModel.UserRole" Role="UserRole" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblRole">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserRole">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserRole_tblUser">
+    <End Type="ProjectPasalDBModel.tblUser" Role="tblUser" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="ProjectPasalDBModel.UserRole" Role="UserRole" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblUser">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserRole">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="tblProduct">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Category" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="Price" Type="Double" />
+    <NavigationProperty Name="ProductTransactions" Relationship="ProjectPasalDBModel.FK_ProductTransaction_tblProduct" FromRole="tblProduct" ToRole="ProductTransaction" />
+    <NavigationProperty Name="SalesItems" Relationship="ProjectPasalDBModel.FK_SalesItem_tblProduct" FromRole="tblProduct" ToRole="SalesItem" />
+  </EntityType>
+  <EntityType Name="tblCustomer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Phone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Balance" Type="Double" />
+    <NavigationProperty Name="CustomerTransactions" Relationship="ProjectPasalDBModel.FK_CustomerTransaction_tblCustomer" FromRole="tblCustomer" ToRole="CustomerTransaction" />
+    <NavigationProperty Name="tblSales" Relationship="ProjectPasalDBModel.FK_tblSale_tblCustomer" FromRole="tblCustomer" ToRole="tblSale" />
+  </EntityType>
+  <EntityType Name="CustomerTransaction">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CustomerId" Type="Int32" />
+    <Property Name="Amount" Type="Double" />
+    <Property Name="Remark" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Balance" Type="Double" />
+    <Property Name="Description" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="tblCustomer" Relationship="ProjectPasalDBModel.FK_CustomerTransaction_tblCustomer" FromRole="CustomerTransaction" ToRole="tblCustomer" />
+  </EntityType>
+  <EntityType Name="ProductTransaction">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductId" Type="Int32" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="Remark" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Balance" Type="Int32" />
+    <Property Name="Descrition" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="tblProduct" Relationship="ProjectPasalDBModel.FK_ProductTransaction_tblProduct" FromRole="ProductTransaction" ToRole="tblProduct" />
+  </EntityType>
+  <EntityType Name="SalesItem">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductId" Type="Int32" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="SalesId" Type="Int32" />
+    <NavigationProperty Name="tblProduct" Relationship="ProjectPasalDBModel.FK_SalesItem_tblProduct" FromRole="SalesItem" ToRole="tblProduct" />
+    <NavigationProperty Name="tblSale" Relationship="ProjectPasalDBModel.FK_SalesItem_tblSale" FromRole="SalesItem" ToRole="tblSale" />
+  </EntityType>
+  <EntityType Name="tblSale">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CustomerId" Type="Int32" />
+    <Property Name="Amount" Type="Double" />
+    <Property Name="Remark" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="UserId" Type="Int32" />
+    <NavigationProperty Name="SalesItems" Relationship="ProjectPasalDBModel.FK_SalesItem_tblSale" FromRole="tblSale" ToRole="SalesItem" />
+    <NavigationProperty Name="tblCustomer" Relationship="ProjectPasalDBModel.FK_tblSale_tblCustomer" FromRole="tblSale" ToRole="tblCustomer" />
+    <NavigationProperty Name="tblUser" Relationship="ProjectPasalDBModel.FK_tblSale_tblUser" FromRole="tblSale" ToRole="tblUser" />
+  </EntityType>
+  <Association Name="FK_CustomerTransaction_tblCustomer">
+    <End Type="ProjectPasalDBModel.tblCustomer" Role="tblCustomer" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="ProjectPasalDBModel.CustomerTransaction" Role="CustomerTransaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblCustomer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CustomerTransaction">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductTransaction_tblProduct">
+    <End Type="ProjectPasalDBModel.tblProduct" Role="tblProduct" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="ProjectPasalDBModel.ProductTransaction" Role="ProductTransaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblProduct">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ProductTransaction">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SalesItem_tblProduct">
+    <End Type="ProjectPasalDBModel.tblProduct" Role="tblProduct" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="ProjectPasalDBModel.SalesItem" Role="SalesItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblProduct">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SalesItem">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SalesItem_tblSale">
+    <End Type="ProjectPasalDBModel.tblSale" Role="tblSale" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="ProjectPasalDBModel.SalesItem" Role="SalesItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblSale">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SalesItem">
+        <PropertyRef Name="SalesId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblSale_tblCustomer">
+    <End Type="ProjectPasalDBModel.tblCustomer" Role="tblCustomer" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="ProjectPasalDBModel.tblSale" Role="tblSale" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblCustomer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="tblSale">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblSale_tblUser">
+    <End Type="ProjectPasalDBModel.tblUser" Role="tblUser" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="ProjectPasalDBModel.tblSale" Role="tblSale" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblUser">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="tblSale">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
